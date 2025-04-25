@@ -1,22 +1,31 @@
+#USER DEFINED CONSTANTS
+CARD_IMAGE_DIRECTORY = "images"
+PROJECTIVE_PLANE_SHEET = "projective_plane.xlsx"
+SPOT_IT_GAME_SLIDESHOW = "spot_it_game.pptx"
+
+
+#DO NOT MODIFY CODE BELOW HERE
+
+#Imports and set up
 from pptx import Presentation
 from pptx.util import Inches
 
 import pandas as pd
 import os
 
-image_path = os.path.join(os.path.curdir, "images")
-image_names = os.listdir(image_path)[:57]
+#Loads in the (first 57) images from the directory
+images_path = os.path.join(os.path.curdir, CARD_IMAGE_DIRECTORY)
+images_names = os.listdir(images_path)[:57]
+images_path_names = [os.path.join(images_path, image_name) for image_name in images_names]
 
-image_path_names = [os.path.join(image_path, image_name) for image_name in image_names]
+#Loads in the card indicies from the projective plane
+cards_df = pd.read_excel(PROJECTIVE_PLANE_SHEET, header=None)  # <- make sure to match filename
+cards = cards_df.values.tolist()
 
-print(image_path_names)
+#Grid position for slide
+grid_positions = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2)]  # 8 out of 9 grid spots
 
-os.abort() #Don't run code below here thats gpt-generated (dumps core)
-
-# Constants
-GRID_POSITIONS = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2)]  # 8 out of 9 grid spots
-
-# Slide and image dimensions
+#Slide and image dimensions
 slide_width = Inches(10)
 slide_height = Inches(7.5)
 img_width = Inches(2.5)
@@ -26,28 +35,27 @@ y_margin = Inches(0.5)
 x_spacing = Inches(3)
 y_spacing = Inches(2.5)
 
-# Load validated projective plane (replace this with your actual data)
-# Example: cards = [[2, 9, 16, 23, 30, 37, 44, 51], ...]
-cards_df = pd.read_excel("projective_plane.xlsx")  # <- make sure to match filename
-cards = cards_df.iloc[:, 1:].values.tolist()
+#Create PowerPoint
+pres = Presentation()
+blank_layout = pres.slide_layouts[6]
 
-# Create PowerPoint
-prs = Presentation()
-blank_layout = prs.slide_layouts[6]
-
-for idx, card in enumerate(cards):
-  slide = prs.slides.add_slide(blank_layout)
+for card in cards:
+  
+  slide = pres.slides.add_slide(blank_layout)
 
   for i, symbol_num in enumerate(card):
-    col, row = GRID_POSITIONS[i]
+    col, row = grid_positions[i]
     x = x_margin + col * x_spacing
     y = y_margin + row * y_spacing
-    image_path = os.path.join(IMAGE_FOLDER, f"{IMAGE_PREFIX}{symbol_num}{IMAGE_SUFFIX}")
+
+    image_path = images_path_names[symbol_num-1]
+    print(image_path)
+
     if os.path.exists(image_path):
-      slide.shapes.add_picture(image_path, x, y, width=img_width, height=img_height)
+      slide.shapes.add_picture(image_path, x, y, img_width, img_height)
     else:
       print(f"Missing image: {image_path}")
 
-# Save
-prs.save("spot_it_game_cards.pptx")
-print("Presentation saved as spot_it_game_cards.pptx")
+#Save
+pres.save(SPOT_IT_GAME_SLIDESHOW)
+print(f"Presentation successfully saved as {SPOT_IT_GAME_SLIDESHOW}")
