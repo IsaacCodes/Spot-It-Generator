@@ -1,21 +1,20 @@
 from pptx import Presentation
 from pptx.util import Inches
+
 import pandas as pd
 import os
 
 image_path = os.path.join(os.path.curdir, "images")
+image_names = os.listdir(image_path)[:57]
 
-for file in os.listdir(image_path):
-  print(file)
+image_path_names = [os.path.join(image_path, image_name) for image_name in image_names]
 
+print(image_path_names)
 
-os.abort()
-print("yo")
+os.abort() #Don't run code below here thats gpt-generated (dumps core)
+
 # Constants
-IMAGE_FOLDER = "images"
-GRID_POSITIONS = [(0, 0), (1, 0), (2, 0),
-            (0, 1), (1, 1), (2, 1),
-            (0, 2), (1, 2)]  # 8 out of 9 grid spots
+GRID_POSITIONS = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2)]  # 8 out of 9 grid spots
 
 # Slide and image dimensions
 slide_width = Inches(10)
@@ -38,7 +37,7 @@ blank_layout = prs.slide_layouts[6]
 
 for idx, card in enumerate(cards):
   slide = prs.slides.add_slide(blank_layout)
-  
+
   for i, symbol_num in enumerate(card):
     col, row = GRID_POSITIONS[i]
     x = x_margin + col * x_spacing
