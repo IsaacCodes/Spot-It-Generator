@@ -29,6 +29,7 @@ y_spacing = Inches(2.5)
 
 # Load validated projective plane (replace this with your actual data)
 # Example: cards = [[2, 9, 16, 23, 30, 37, 44, 51], ...]
+# BUG: MODIFY CODE TO NOT BREAK WHEN FOLDER
 cards_df = pd.read_excel("projective_plane.xlsx")  # <- make sure to match filename
 cards = cards_df.iloc[:, 1:].values.tolist()
 
