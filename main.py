@@ -13,6 +13,8 @@ from pptx.util import Inches
 import pandas as pd
 import os
 
+# BUG: MODIFY CODE TO NOT BREAK WHEN FOLDER (AND CHANGE TO NOT SVG)
+
 #Loads in the (first 57) images from the directory
 images_path = os.path.join(os.path.curdir, CARD_IMAGE_DIRECTORY)
 images_names = os.listdir(images_path)[:57]
