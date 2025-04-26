@@ -21,8 +21,11 @@ images_names = os.listdir(images_path)[:57]
 images_path_names = [os.path.join(images_path, image_name) for image_name in images_names]
 
 #Loads in the card indicies from the projective plane
-cards_df = pd.read_excel(PROJECTIVE_PLANE_SHEET, header=None)  # <- make sure to match filename
+cards_df = pd.read_excel(PROJECTIVE_PLANE_SHEET)
 cards = cards_df.values.tolist()
+
+print(cards_df)
+print(cards)
 
 #Grid position for slide
 grid_positions = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2)]  # 8 out of 9 grid spots
@@ -45,7 +48,7 @@ for card in cards:
   
   slide = pres.slides.add_slide(blank_layout)
 
-  for i, symbol_num in enumerate(card):
+  for i, symbol_num in enumerate(card[1:]):
     col, row = grid_positions[i]
     x = x_margin + col * x_spacing
     y = y_margin + row * y_spacing
