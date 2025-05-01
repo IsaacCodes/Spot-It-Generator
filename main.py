@@ -9,7 +9,7 @@ SPOT_IT_GAME_SLIDESHOW = "spot_it_game.pptx"
 #Imports and set up
 from pptx import Presentation
 from pptx.util import Inches
-
+from random import shuffle
 import pandas as pd
 import os
 
@@ -28,15 +28,15 @@ print(cards_df)
 print(cards)
 
 #Grid position for slide
-grid_positions = [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (0, 2), (1, 2)]  # 8 out of 9 grid spots
+grid_positions = [(0, 0), (1, 0), (2, 0), (0, 1), (2, 1), (0, 2), (1, 2), (2, 2)]  # 8 out of 9 grid spots
 
 #Slide and image dimensions
 slide_width = Inches(10)
 slide_height = Inches(7.5)
 img_width = Inches(2.5)
 img_height = Inches(2.5)
-x_margin = Inches(0.5)
-y_margin = Inches(0.5)
+x_margin = Inches(0.75)
+y_margin = Inches(0.0)
 x_spacing = Inches(3)
 y_spacing = Inches(2.5)
 
@@ -45,7 +45,7 @@ pres = Presentation()
 blank_layout = pres.slide_layouts[6]
 
 for card in cards:
-  
+  shuffle(grid_positions)
   slide = pres.slides.add_slide(blank_layout)
 
   for i, symbol_num in enumerate(card[1:]):
