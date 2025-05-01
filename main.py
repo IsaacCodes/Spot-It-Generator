@@ -12,20 +12,32 @@ from pptx.util import Inches
 from random import shuffle
 import pandas as pd
 import os
+from sys import exit
 
-# BUG: MODIFY CODE TO NOT BREAK WHEN FOLDER (AND CHANGE TO NOT SVG)
-
-#Loads in the (first 57) images from the directory
+#Loads in the images from the directory
 images_path = os.path.join(os.path.curdir, CARD_IMAGE_DIRECTORY)
-images_names = os.listdir(images_path)[:57]
+images_names = os.listdir(images_path)
 images_path_names = [os.path.join(images_path, image_name) for image_name in images_names]
+
+#Checks for right file extensions and count
+valid_extensions = ["png", "jpg", "jpeg", "gif"]
+for image in images_path_names:
+  if not os.path.isfile(image):
+    print("Please do not place any subfolders in the images folder")
+    exit()
+  extension = image.split(os.extsep)[-1]
+  if extension not in valid_extensions:
+    print(f"File type '{extension}' is not supported. Please use one of the following: {', '.join(valid_extensions)}")
+    exit()
+
+if len(images_names) != 57:
+  print(f"You have placed '{len(images_names)}' files in images. Please instead place 57.")
+  exit()
 
 #Loads in the card indicies from the projective plane
 cards_df = pd.read_excel(PROJECTIVE_PLANE_SHEET)
 cards = cards_df.values.tolist()
-
 print(cards_df)
-print(cards)
 
 #Grid position for slide
 grid_positions = [(0, 0), (1, 0), (2, 0), (0, 1), (2, 1), (0, 2), (1, 2), (2, 2)]  # 8 out of 9 grid spots
