@@ -24,7 +24,7 @@ images_path_names = [os.path.join(images_path, image_name) for image_name in ima
 valid_extensions = ["png", "jpg", "jpeg", "gif"]
 for image in images_path_names:
   if not os.path.isfile(image):
-    print("Please do not place any subfolders in the images folder")
+    print("Please only place files in the images folder")
     exit()
   extension = image.split(os.extsep)[-1]
   if extension not in valid_extensions:
@@ -50,15 +50,15 @@ slide_height = Inches(10)
 img_width = Inches(2.5)
 img_height = Inches(2.5)
 x_spacing = Inches(3)
-y_spacing = Inches(2.5)
+y_spacing = Inches(3)
 
 #Create PowerPoint
 pres = Presentation()
-blank_layout = pres.slide_layouts[6]
+pres.slide_width, pres.slide_height = slide_width, slide_height
 
 for card in cards:
   random.shuffle(grid_positions)
-  slide = pres.slides.add_slide(blank_layout)
+  slide = pres.slides.add_slide(pres.slide_layouts[6])
 
   for i, symbol_num in enumerate(card[1:]):
     col, row = grid_positions[i]
