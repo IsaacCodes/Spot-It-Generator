@@ -9,6 +9,7 @@ SPOT_IT_GAME_SLIDESHOW = "spot_it_game.pptx"
 #Imports and set up
 from pptx import Presentation
 from pptx.util import Inches
+import random
 from random import shuffle
 import pandas as pd
 import os
@@ -69,7 +70,8 @@ for card in cards:
     print(image_path)
 
     if os.path.exists(image_path):
-      slide.shapes.add_picture(image_path, x, y, img_width, img_height)
+      img = slide.shapes.add_picture(image_path, x, y, img_width, img_height)
+      img.rotation = random.randint(0, 360)
     else:
       print(f"Missing image: {image_path}")
 
