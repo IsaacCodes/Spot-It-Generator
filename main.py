@@ -9,11 +9,11 @@ SPOT_IT_GAME_SLIDESHOW = "spot_it_game.pptx"
 #Imports and set up
 from pptx import Presentation
 from pptx.util import Inches
-import random
-from random import shuffle
 import pandas as pd
+from PIL import Image
 import os
 from sys import exit
+import random
 
 #Loads in the images from the directory
 images_path = os.path.join(os.path.curdir, CARD_IMAGE_DIRECTORY)
@@ -38,18 +38,17 @@ if len(images_names) != 57:
 #Loads in the card indicies from the projective plane
 cards_df = pd.read_excel(PROJECTIVE_PLANE_SHEET)
 cards = cards_df.values.tolist()
+random.shuffle(cards)
 print(cards_df)
 
 #Grid position for slide
-grid_positions = [(0, 0), (1, 0), (2, 0), (0, 1), (2, 1), (0, 2), (1, 2), (2, 2)]  # 8 out of 9 grid spots
+grid_positions = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
 
 #Slide and image dimensions
 slide_width = Inches(10)
-slide_height = Inches(7.5)
+slide_height = Inches(10)
 img_width = Inches(2.5)
 img_height = Inches(2.5)
-x_margin = Inches(0.75)
-y_margin = Inches(0.0)
 x_spacing = Inches(3)
 y_spacing = Inches(2.5)
 
@@ -58,22 +57,27 @@ pres = Presentation()
 blank_layout = pres.slide_layouts[6]
 
 for card in cards:
-  shuffle(grid_positions)
+  random.shuffle(grid_positions)
   slide = pres.slides.add_slide(blank_layout)
 
   for i, symbol_num in enumerate(card[1:]):
     col, row = grid_positions[i]
-    x = x_margin + col * x_spacing
-    y = y_margin + row * y_spacing
 
-    image_path = images_path_names[symbol_num-1]
-    print(image_path)
+    img_path = images_path_names[symbol_num-1]
 
-    if os.path.exists(image_path):
-      img = slide.shapes.add_picture(image_path, x, y, img_width, img_height)
-      img.rotation = random.randint(0, 360)
+    img = Image.open(img_path)
+
+    if img.width > img.height:
+      slide_img = slide.shapes.add_picture(img_path, 0, 0, width=img_width * random.uniform(0.7, 1))
     else:
-      print(f"Missing image: {image_path}")
+      slide_img = slide.shapes.add_picture(img_path, 0, 0, height=img_height * random.uniform(0.7, 1))
+
+    slide_img.left = int(slide_width / 2 + col * x_spacing - slide_img.width / 2)
+    slide_img.top = int(slide_height / 2 + row * y_spacing - slide_img.height / 2)
+
+    slide_img.rotation = random.randint(0, 360)
+
+    print(img_path)
 
 #Save
 pres.save(SPOT_IT_GAME_SLIDESHOW)
